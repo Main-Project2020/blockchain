@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/web3@0.20.5/dist/web3.min.js"></script>
+    <script type="text/javascript" src="w.js"></<script>
+
+    </script>
+    <!-- The generated javascript and app.js will be substituted in below -->
+    <!-- JAVASCRIPT -->
+
+    <!-- The app.css contents will be substituted in below -->
+    <!-- STYLE -->
+    <<style media="screen">
+      body {
+          background-color: #725BA4;
+          color: #FCE8DF;
+          font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+          text-align: center;
+      }
+
+    </style>
+
+</head>
+
+<body>
+    <!-- Form fields for creating new coins -->
+    <div id="create" class="tabcontent">
+        <h2>Create new coins</h2>
+        <div class="input-group">
+            <h3>Address</h3>
+            <input type="text" id="create-address" placeholder="Enter address..." />
+        </div>
+        <div class="input-group">
+            <h3>Amount</h3>
+            <input type="number" id="create-amount" placeholder="Enter amount..." />
+        </div>
+        <div class="input-group">
+            <button class="btn" id="button-create">Send</button>
+        </div>
+        <h1 class="text message">Result:&nbsp;<span id="message1"></span></h1>
+    </div>
+    <!-- Form fields for checking wallet balances -->
+    <div id="balances" class="tabcontent">
+        <h2>Check balance of wallet</h2>
+        <div class="input-group">
+            <h3>Address</h3>
+            <input type="text" id="balance-address" placeholder="Enter address..." />
+        </div>
+        <div class="input-group">
+            <button class="btn" id="button-check">Check balance</button>
+        </div>
+    </div>
+
+    <h1 class="text message">Balance:&nbsp;<span id="message2"></span></h1>
+</body>
+
+</html>
