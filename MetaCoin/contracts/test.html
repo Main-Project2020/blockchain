@@ -1,0 +1,241 @@
+<!doctype html>
+
+<html>
+<head>
+  <script type="text/javascript" src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/web3@0.20.5/dist/web3.min.js"></script>
+
+  <script>
+  var web3;
+  if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);
+  } else {
+    // set the provider you want from Web3.providers
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+  }
+
+
+
+  var EthereumSession = web3.eth.contract([
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "sendCoin",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "sufficient",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getBalanceInEth",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]);
+
+  var instance = EthereumSession.at("0x2598DD0c7057f2741484c80bd66307F656CbAACA");
+
+
+  web3.eth.defaultAccount = web3.eth.accounts[0];
+
+
+
+
+  $(document).on("click", "#button-create", function() {
+    let accounts = instance.getAccounts();
+    // Get input values for address and amount
+    var amount = $("#create-amount").val();
+    let result = instance.sendCoin(accounts[1], amount);
+    if(result == true)
+      $("#message1").text("Successful");
+  });
+  //wait until the transaction is mined.
+
+  $(document).on("click", "#button-check", async function() {
+
+     let accounts = web3.eth.getAccounts();
+    // Get input values for address and amount
+    let j = $("#balance-address").val();
+    let balance = instance.getBalance(accounts[j]);
+    $("#message2").text(balance.toNumber());
+  });
+
+
+
+  //Truffle-Contract
+/*
+  var provider = new Web3.providers.HttpProvider("http://localhost:7545");
+  var EthereumSessionTruffle = TruffleContract({abi: [
+  	{
+  		"constant": false,
+  		"inputs": [
+  			{
+  				"name": "_myInt",
+  				"type": "uint256"
+  			}
+  		],
+  		"name": "setTheInt",
+  		"outputs": [],
+  		"payable": false,
+  		"stateMutability": "nonpayable",
+  		"type": "function"
+  	},
+  	{
+  		"constant": true,
+  		"inputs": [],
+  		"name": "getTheInt",
+  		"outputs": [
+  			{
+  				"name": "",
+  				"type": "uint256"
+  			}
+  		],
+  		"payable": false,
+  		"stateMutability": "view",
+  		"type": "function"
+  	}
+  ]});
+  EthereumSessionTruffle.setProvider(provider);
+  var esTruffleInstance = null;
+  EthereumSessionTruffle.at("0x2598DD0c7057f2741484c80bd66307F656CbAACA").then(instance => {
+  	esTruffleInstance = instance;
+  	console.log(instance);
+  	return instance.setTheInt(4545);
+  }).then(function() {
+  	return esTruffleInstance.getTheInt();
+  }).then(result => { console.log(result);});
+
+
+
+*/
+  </script>
+
+  <style media="screen">
+    body {
+        background-color: #725BA4;
+        color: #FCE8DF;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        text-align: center;
+    }
+
+  </style>
+</head>
+
+<body>
+    <!-- Form fields for creating new coins -->
+    <div id="create" class="tabcontent">
+        <h2>Create new coins</h2>
+        <div class="input-group">
+            <h3>Address</h3>
+            <input type="text" id="create-address" placeholder="Enter address..." />
+        </div>
+        <div class="input-group">
+            <h3>Amount</h3>
+            <input type="number" id="create-amount" placeholder="Enter amount..." />
+        </div>
+        <div class="input-group">
+            <button class="btn" id="button-create">Send</button>
+        </div>
+        <h1 class="text message">Result:&nbsp;<span id="message1"></span></h1>
+    </div>
+    <!-- Form fields for checking wallet balances -->
+    <div id="balances" class="tabcontent">
+        <h2>Check balance of wallet</h2>
+        <div class="input-group">
+            <h3>Address</h3>
+            <input type="text" id="balance-address" placeholder="Enter address..." />
+        </div>
+        <div class="input-group">
+            <button class="btn" id="button-check">Check balance</button>
+        </div>
+    </div>
+
+    <h1 class="text message">Balance:&nbsp;<span id="message2"></span></h1>
+</body>
+
+</html>
