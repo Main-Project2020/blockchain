@@ -10,6 +10,7 @@ Other 2 .sol files are not much important.
 Then we have the front-end files and web3.js file in the folder.
 
 w.js is the name of the web3.js file.
+test.html contains all the functions in the single file.
 
 C Folder
 This contain another sample project files. 
