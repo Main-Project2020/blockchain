@@ -121,78 +121,32 @@
   var instance = EthereumSession.at("0x2598DD0c7057f2741484c80bd66307F656CbAACA");
 
 
-  web3.eth.defaultAccount = web3.eth.accounts[0];
+  //web3.eth.defaultAccount = web3.eth.accounts[0];
 
 
 
 
   $(document).on("click", "#button-create", function() {
-    let accounts = instance.getAccounts();
+    let accounts = web3.eth.accounts;
     // Get input values for address and amount
     var amount = $("#create-amount").val();
+    //$("#message1").text(accounts[1]);
     let result = instance.sendCoin(accounts[1], amount);
     if(result == true)
       $("#message1").text("Successful");
   });
   //wait until the transaction is mined.
 
-  $(document).on("click", "#button-check", async function() {
+  $(document).on("click", "#button-check",   function() {
 
-     let accounts = web3.eth.getAccounts();
+     let accounts = web3.eth.accounts;
     // Get input values for address and amount
+    //$("#message2").text(accounts[0]);
     let j = $("#balance-address").val();
     let balance = instance.getBalance(accounts[j]);
     $("#message2").text(balance.toNumber());
   });
 
-
-
-  //Truffle-Contract
-/*
-  var provider = new Web3.providers.HttpProvider("http://localhost:7545");
-  var EthereumSessionTruffle = TruffleContract({abi: [
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_myInt",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "setTheInt",
-  		"outputs": [],
-  		"payable": false,
-  		"stateMutability": "nonpayable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "getTheInt",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	}
-  ]});
-  EthereumSessionTruffle.setProvider(provider);
-  var esTruffleInstance = null;
-  EthereumSessionTruffle.at("0x2598DD0c7057f2741484c80bd66307F656CbAACA").then(instance => {
-  	esTruffleInstance = instance;
-  	console.log(instance);
-  	return instance.setTheInt(4545);
-  }).then(function() {
-  	return esTruffleInstance.getTheInt();
-  }).then(result => { console.log(result);});
-
-
-
-*/
   </script>
 
   <style media="screen">
