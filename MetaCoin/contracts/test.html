@@ -16,12 +16,31 @@
 
 
 
-  var EthereumSession = web3.eth.contract([
+  var EthereumSession = web3.eth.contract( [
     {
       "inputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "index_from",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "ReCharge",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -51,6 +70,37 @@
     {
       "constant": false,
       "inputs": [
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "addBalance",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "sufficent",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "C_Sender",
+          "type": "address"
+        },
         {
           "internalType": "address",
           "name": "receiver",
@@ -121,31 +171,54 @@
   var instance = EthereumSession.at("0x2598DD0c7057f2741484c80bd66307F656CbAACA");
 
 
-  //web3.eth.defaultAccount = web3.eth.accounts[0];
+  web3.eth.defaultAccount = web3.eth.accounts[0];
 
 
 
 
-  $(document).on("click", "#button-create", function() {
+  $(document).on("click", "#button-create", function () {
     let accounts = web3.eth.accounts;
     // Get input values for address and amount
     var amount = $("#create-amount").val();
-    //$("#message1").text(accounts[1]);
-    let result = instance.sendCoin(accounts[1], amount);
-    if(result == true)
-      $("#message1").text("Successful");
+    let result = await instance.sendCoin(accounts[0], accounts[1], amount);
+    if (result == true)
+     $("#message1").text("Success");
+    else {
+      $("#message1").text(result);
+    }
+
   });
+
   //wait until the transaction is mined.
 
-  $(document).on("click", "#button-check",   function() {
+  $(document).on("click", "#button-check",  function() {
 
      let accounts = web3.eth.accounts;
     // Get input values for address and amount
-    //$("#message2").text(accounts[0]);
+
     let j = $("#balance-address").val();
+
     let balance = instance.getBalance(accounts[j]);
     $("#message2").text(balance.toNumber());
   });
+
+  $(document).on("click", "#button-recharge", async function () {
+
+     let accounts = web3.eth.accounts;
+    // Get input values for address and amount
+
+    let j = $("#recharge-address").val();
+    let amount = $("#recharge-amount").val();
+
+    let result = await instance.addBalance(accounts[j], amount);
+    if (result == true)
+     $("#message3").text("Success");
+    else {
+      $("#message3").text(result);
+    }
+
+  });
+
 
   </script>
 
@@ -188,8 +261,25 @@
             <button class="btn" id="button-check">Check balance</button>
         </div>
     </div>
+      <h1 class="text message">Balance:&nbsp;<span id="message2"></span></h1>
 
-    <h1 class="text message">Balance:&nbsp;<span id="message2"></span></h1>
+    <div id="recharge" class="tabcontent">
+        <h2>Recharge Your Account</h2>
+        <div class="input-group">
+            <h3>Address</h3>
+            <input type="text" id="recharge-address" placeholder="Enter address..." />
+        </div>
+        <div class="input-group">
+            <h3>Amount</h3>
+            <input type="number" id="recharge-amount" placeholder="Enter amount..." />
+        </div>
+        <div class="input-group">
+            <button class="btn" id="button-recharge">Recharge</button>
+        </div>
+        <h1 class="text message">Balance:&nbsp;<span id="message3"></span></h1>
+    </div>
+
+
 </body>
 
 </html>
