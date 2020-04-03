@@ -29,7 +29,7 @@ Coin.prototype.init = function() {
     var contract_interface = this.web3.eth.contract(this.Contract.abi);
 
     // Create the contract instance for the specific address provided in the configuration.
-    this.instance = contract_interface.at("0x71Bb8F09B17290815b359C83866aF1B5dE6202Eb");
+    this.instance = contract_interface.at("0x7b3280c6a0D0229a254Bdb299c75Db1A03B7Ecfe");
 };
 
 
@@ -61,7 +61,7 @@ Coin.prototype.showAddressBalance = function(hash, cb) {
 
 // Get balance of Tokens found by address from contract
 Coin.prototype.getBalance = function(address, cb) {
-    this.instance.getbalance(address, function(error, result) {
+    this.instance.balances(address, function(error, result) {
         cb(error, result);
     })
 }
@@ -89,7 +89,7 @@ Coin.prototype.createTokens = function() {
 
     // Transfer amount to other address
     // Use the public mint function from the smart contract
-    this.instance.mint(address, amount,
+    this.instance.send(address, amount,{ from: this.web3.eth.accounts[0], gas: 100000, gasPrice: 100000, gasLimit: 100000 },
         // If there's an error, log it
         function(error, txHash) {
             if(error) {
@@ -166,6 +166,7 @@ Coin.prototype.onReady = function() {
 
 if(typeof(Contracts) === "undefined")
   var Contracts={ Coin: { abi:[
+
     {
       "inputs": [],
       "payable": false,
@@ -272,28 +273,8 @@ if(typeof(Contracts) === "undefined")
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "addr",
-          "type": "address"
-        }
-      ],
-      "name": "getbalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
     }
+
   ] }};
 var coin = new Coin(Contracts['Coin']);
 
