@@ -55,4 +55,8 @@ contract Coin {
         // Emit event defined earlier
         emit Sent(msg.sender, receiver, amount);
     }
+
+    function getbalance(address addr) public view returns(uint) {
+  		return balances[addr];
+  	}
 }
