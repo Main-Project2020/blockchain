@@ -26,7 +26,8 @@ contract Coin {
     constructor() public {
         // Uses the special msg global variable to store the
         // address of the contract creator
-        minter = msg.sender;
+        //minter = msg.sender;
+        balances[msg.sender] = 10000;
     }
 
     // Sends an amount of newly created coins to an address
@@ -37,10 +38,10 @@ contract Coin {
         // and reverts all modifications to state from the current call
 
         // Can only be called by the contract creator
-        require(msg.sender == minter);
+        //require(msg.sender == minter);
 
         // Ensures a maximum amount of tokens
-        require(amount < 1e60);
+        //require(amount < 1e60);
         balances[receiver] += amount;
     }
 
@@ -49,6 +50,7 @@ contract Coin {
     function send(address receiver, uint amount) public {
         // The sender must have enough coins to send
         require(amount <= balances[msg.sender], "Insufficient balance.");
+        //if (balances[msg.sender] < amount) balances[msg.sender] += amount;
         // Adjust balances
         balances[msg.sender] -= amount;
         balances[receiver] += amount;
@@ -56,7 +58,5 @@ contract Coin {
         emit Sent(msg.sender, receiver, amount);
     }
 
-    function getbalance(address addr) public view returns(uint) {
-  		return balances[addr];
-  	}
+
 }
